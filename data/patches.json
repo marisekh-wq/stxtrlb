@@ -1,108 +1,28 @@
-{
-  "list": [
-    {
-      "name": "Patch 1",
-      "img": "images/patches/p01.jpg"
-    },
-    {
-      "name": "Patch 2",
-      "img": "images/patches/p02.jpg"
-    },
-    {
-      "name": "Patch 3",
-      "img": "images/patches/p03.jpg"
-    },
-    {
-      "name": "Patch 4",
-      "img": "/images/uploads/p04.jpg"
-    },
-    {
-      "name": "Patch 5",
-      "img": "images/patches/p05.jpg"
-    },
-    {
-      "name": "Patch 6",
-      "img": "images/patches/p06.jpg"
-    },
-    {
-      "name": "Patch 7",
-      "img": "images/patches/p07.jpg"
-    },
-    {
-      "name": "Patch 8",
-      "img": "images/patches/p08.jpg"
-    },
-    {
-      "name": "Patch 9",
-      "img": "images/patches/p09.jpg"
-    },
-    {
-      "name": "Patch 10",
-      "img": "images/patches/p10.jpg"
-    },
-    {
-      "name": "Patch 11",
-      "img": "images/patches/p11.jpg"
-    },
-    {
-      "name": "Patch 12",
-      "img": "images/patches/p12.jpg"
-    },
-    {
-      "name": "Patch 13",
-      "img": "images/patches/p13.jpg"
-    },
-    {
-      "name": "Patch 14",
-      "img": "images/patches/p14.jpg"
-    },
-    {
-      "name": "Patch 15",
-      "img": "images/patches/p15.jpg"
-    },
-    {
-      "name": "Patch 16",
-      "img": "images/patches/p16.jpg"
-    },
-    {
-      "name": "Patch 17",
-      "img": "images/patches/p17.jpg"
-    },
-    {
-      "name": "Patch 18",
-      "img": "images/patches/p18.jpg"
-    },
-    {
-      "name": "Patch 19",
-      "img": "images/patches/p19.jpg"
-    },
-    {
-      "name": "Patch 20",
-      "img": "images/patches/p20.jpg"
-    },
-    {
-      "name": "Patch 21",
-      "img": "images/patches/p21.jpg"
-    },
-    {
-      "name": "Patch 22",
-      "img": "images/patches/p22.jpg"
-    },
-    {
-      "name": "Patch 23",
-      "img": "images/patches/p23.jpg"
-    },
-    {
-      "name": "Patch 24",
-      "img": "images/patches/p24.jpg"
-    },
-    {
-      "name": "Patch 25",
-      "img": "images/patches/p25.jpg"
-    },
-    {
-      "name": "Patch 26",
-      "img": "images/patches/p26.jpg"
-    }
-  ]
-}
+{"list":[
+  {"name":"Patch 1", "img":"images/patches/p01.jpg"},
+  {"name":"Patch 2", "img":"images/patches/p02.jpg"},
+  {"name":"Patch 3", "img":"images/patches/p03.jpg"},
+  {"name":"Patch 4", "img":"images/patches/p04.jpg"},
+  {"name":"Patch 5", "img":"images/patches/p05.jpg"},
+  {"name":"Patch 6", "img":"images/patches/p06.jpg"},
+  {"name":"Patch 7", "img":"images/patches/p07.jpg"},
+  {"name":"Patch 8", "img":"images/patches/p08.jpg"},
+  {"name":"Patch 9", "img":"images/patches/p09.jpg"},
+  {"name":"Patch 10","img":"images/patches/p10.jpg"},
+  {"name":"Patch 11","img":"images/patches/p11.jpg"},
+  {"name":"Patch 12","img":"images/patches/p12.jpg"},
+  {"name":"Patch 13","img":"images/patches/p13.jpg"},
+  {"name":"Patch 14","img":"images/patches/p14.jpg"},
+  {"name":"Patch 15","img":"images/patches/p15.jpg"},
+  {"name":"Patch 16","img":"images/patches/p16.jpg"},
+  {"name":"Patch 17","img":"images/patches/p17.jpg"},
+  {"name":"Patch 18","img":"images/patches/p18.jpg"},
+  {"name":"Patch 19","img":"images/patches/p19.jpg"},
+  {"name":"Patch 20","img":"images/patches/p20.jpg"},
+  {"name":"Patch 21","img":"images/patches/p21.jpg"},
+  {"name":"Patch 22","img":"images/patches/p22.jpg"},
+  {"name":"Patch 23","img":"images/patches/p23.jpg"},
+  {"name":"Patch 24","img":"images/patches/p24.jpg"},
+  {"name":"Patch 25","img":"images/patches/p25.jpg"},
+  {"name":"Patch 26","img":"images/patches/p26.jpg"}
+]}
