@@ -1,0 +1,54 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STXTR WEBSITE — HOW TO ADD YOUR PHOTOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Just drop your photo into the right folder with the right name.
+The website will pick it up automatically — no coding needed!
+
+─────────────────────────────────────────
+  LOGO  (shows in the top nav bar)
+─────────────────────────────────────────
+  Folder : images/
+  File   : logo.png
+  Size   : any — recommended height 60px, transparent background PNG
+
+─────────────────────────────────────────
+  PRODUCT PHOTOS  (the 3 cards on the Shop section)
+─────────────────────────────────────────
+  Folder : images/products/
+  Files  :
+    pouch.jpg     → Canvas Pouches card
+    stickers.jpg  → Phone Case Stickers card
+    patches.jpg   → Embroidered Patches card
+
+  Tips:
+  • Square or landscape photos work best (ratio 4:3 or 1:1)
+  • JPG or PNG both fine
+  • Any size — the website crops and resizes automatically
+
+─────────────────────────────────────────
+  ABOUT / BRAND PHOTO
+─────────────────────────────────────────
+  Folder : images/about/
+  File   : brand.jpg   (or brand.png)
+  Size   : roughly square — 600x600px ideal
+
+─────────────────────────────────────────
+  PATCH IMAGES  (in the customizer)
+─────────────────────────────────────────
+  Folder : images/patches/
+  See    : images/patches/README.txt for the full file name list
+
+─────────────────────────────────────────
+  STICKER IMAGES  (in the customizer)
+─────────────────────────────────────────
+  Folder : images/stickers/
+  See    : images/stickers/README.txt for the full file name list
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  IMPORTANT NOTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• File names are CASE SENSITIVE on live servers.
+  Use lowercase letters only (e.g. pouch.jpg not Pouch.JPG)
+• If the photo doesn't show, the emoji / placeholder appears instead
+• After adding a photo, just refresh your browser (Ctrl+R) to see it
