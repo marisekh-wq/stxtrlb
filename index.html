@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>STXTR — Wear Your Vibe</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
@@ -1567,20 +1566,29 @@ const revealObs = new IntersectionObserver(entries => {
 }, { threshold:.1, rootMargin:'0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-/* ── NETLIFY IDENTITY ──────────────────────────────────────────────────────── */
-// Handles invite links & redirects to /admin after login
-if (window.netlifyIdentity) {
-  window.netlifyIdentity.on('init', user => {
-    if (!user) {
-      window.netlifyIdentity.on('login', () => {
-        document.location.href = '/admin/';
-      });
-    }
-  });
-}
-
 /* ── LOAD DATA FROM ADMIN FILES ────────────────────────────────────────────── */
 async function loadSiteData() {
+
+  // 0. Colors
+  try {
+    const r = await fetch('data/colors.json');
+    if (r.ok) {
+      const c = await r.json();
+      const root = document.documentElement.style;
+      if (c.primary)    { root.setProperty('--red',   c.primary);    root.setProperty('--red-dark', c.primary); }
+      if (c.secondary)  { root.setProperty('--blue',  c.secondary);  }
+      if (c.dark)       { root.setProperty('--dark',  c.dark);       root.setProperty('--mid', c.dark); }
+      if (c.background) { root.setProperty('--cream', c.background); }
+      if (c.hero_title) {
+        const title = document.querySelector('.hero-title');
+        if (title) title.style.color = c.hero_title;
+      }
+      if (c.social_bg) {
+        const social = document.getElementById('social');
+        if (social) social.style.background = c.social_bg;
+      }
+    }
+  } catch(e) {}
 
   // 1. Text content (tagline, about, prices, links)
   try {
@@ -1626,7 +1634,11 @@ async function loadSiteData() {
       if (d.list && d.list.length) {
         PATCHES = d.list.map((p, i) => ({
           id: 'p' + String(i + 1).padStart(2, '0'),
-          e: '🌸', n: p.name, img: p.img
+          e: '🌸',
+          n: p.name || ('Patch ' + (i + 1)),
+          // Support both new multi-image format (imgs[]) and old single-image (img)
+          img: Array.isArray(p.imgs) && p.imgs.length ? p.imgs[0] : (p.img || null),
+          imgs: Array.isArray(p.imgs) && p.imgs.length ? p.imgs : (p.img ? [p.img] : [])
         }));
       }
     }
@@ -1640,7 +1652,12 @@ async function loadSiteData() {
       if (d.list && d.list.length) {
         STICKERS = d.list.map((s, i) => ({
           id: 's' + String(i + 1).padStart(2, '0'),
-          e: '🎨', n: s.name, cat: s.cat || 'cute', img: s.img
+          e: '🎨',
+          n: s.name || ('Sticker ' + (i + 1)),
+          cat: s.cat || 'cute',
+          // Support both new multi-image format (imgs[]) and old single-image (img)
+          img: Array.isArray(s.imgs) && s.imgs.length ? s.imgs[0] : (s.img || null),
+          imgs: Array.isArray(s.imgs) && s.imgs.length ? s.imgs : (s.img ? [s.img] : [])
         }));
         // Re-add word stickers
         STICKERS.push(

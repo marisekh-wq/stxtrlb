@@ -1,16 +1,17 @@
 backend:
-  name: git-gateway
+  name: github
   repo: marisekh-wq/stxtrlb
   branch: main
+  base_url: https://stxtr-oauth.YOUR_SUBDOMAIN.workers.dev
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
 collections:
 
-  # ── WEBSITE TEXT ─────────────────────────────────────────────
+  # ── WEBSITE TEXT & COLOURS ────────────────────────────────────
   - name: "site"
-    label: "✏️ Website Text & Links"
+    label: "✏️ Website Text & Settings"
     files:
       - label: "Homepage Content"
         name: "content"
@@ -47,6 +48,46 @@ collections:
             default: 2
             hint: "Pouch + 1 patch = this + 1, + 2 patches = this + 2, etc."
 
+  # ── COLOURS ───────────────────────────────────────────────────
+  - name: "colors"
+    label: "🎨 Website Colors"
+    files:
+      - label: "Color Scheme"
+        name: "colors"
+        file: "data/colors.json"
+        format: json
+        fields:
+          - label: "Primary Color (buttons, logo, accents)"
+            name: "primary"
+            widget: "color"
+            default: "#D42020"
+            hint: "Main brand color — currently red"
+          - label: "Secondary Color (sticker selection, steps)"
+            name: "secondary"
+            widget: "color"
+            default: "#5A8FBF"
+            hint: "Secondary accent — currently blue"
+          - label: "Dark Color (backgrounds, borders)"
+            name: "dark"
+            widget: "color"
+            default: "#0A0A0F"
+            hint: "Dark sections — currently near-black"
+          - label: "Page Background"
+            name: "background"
+            widget: "color"
+            default: "#F8F5EF"
+            hint: "Light sections background — currently off-white"
+          - label: "Hero Title Color"
+            name: "hero_title"
+            widget: "color"
+            default: "#D42020"
+            hint: "The big STXTR text color on the homepage"
+          - label: "Social Section Background"
+            name: "social_bg"
+            widget: "color"
+            default: "#D42020"
+            hint: "Background of the Instagram/TikTok section"
+
   # ── PRODUCT PHOTOS ────────────────────────────────────────────
   - name: "products"
     label: "🖼️ Product Photos"
@@ -73,6 +114,39 @@ collections:
             widget: "image"
             hint: "Photo shown in the About section"
 
+  # ── PHOTO GALLERY ─────────────────────────────────────────────
+  - name: "gallery"
+    label: "📸 Photo Gallery"
+    files:
+      - label: "Gallery Photos"
+        name: "gallery"
+        file: "data/gallery.json"
+        format: json
+        fields:
+          - label: "Photos"
+            name: "photos"
+            widget: "list"
+            summary: "{{fields.caption}}"
+            hint: "Click 'Add Photos' to add as many as you want. You can upload multiple images to the media library at once."
+            fields:
+              - label: "Photo"
+                name: "img"
+                widget: "image"
+                hint: "Upload your product photo"
+              - label: "Caption"
+                name: "caption"
+                widget: "string"
+                required: false
+                hint: "e.g. Canvas Pouch — Pink Zipper"
+              - label: "Category"
+                name: "type"
+                widget: "select"
+                options:
+                  - {label: "Pouch",   value: "pouch"}
+                  - {label: "Sticker", value: "sticker"}
+                  - {label: "Patch",   value: "patch"}
+                  - {label: "All",     value: "all"}
+
   # ── PATCHES ───────────────────────────────────────────────────
   - name: "patches"
     label: "🌟 Patches"
@@ -86,9 +160,24 @@ collections:
             name: "list"
             widget: "list"
             summary: "{{fields.name}}"
+            hint: >
+              To bulk-add: open the Media Library (top-right 🖼️), upload all your
+              images at once, then click "Add Patches" below for each new item and
+              pick the image you already uploaded — no re-uploading needed.
             fields:
-              - {label: "Name", name: "name", widget: "string"}
-              - {label: "Image", name: "img", widget: "image"}
+              - label: "Name"
+                name: "name"
+                widget: "string"
+                required: false
+                hint: "Optional — leave blank and it will be named automatically"
+              - label: "Images"
+                name: "imgs"
+                widget: "list"
+                label_singular: "Image"
+                hint: "Add one or more photos for this patch (first photo is shown in the shop)"
+                field:
+                  label: "Image"
+                  widget: "image"
 
   # ── STICKERS ──────────────────────────────────────────────────
   - name: "stickers"
@@ -103,8 +192,16 @@ collections:
             name: "list"
             widget: "list"
             summary: "{{fields.name}}"
+            hint: >
+              To bulk-add: open the Media Library (top-right 🖼️), upload all your
+              images at once, then click "Add Stickers" below for each new item and
+              pick the image you already uploaded — no re-uploading needed.
             fields:
-              - {label: "Name", name: "name", widget: "string"}
+              - label: "Name"
+                name: "name"
+                widget: "string"
+                required: false
+                hint: "Optional — leave blank and it will be named automatically"
               - label: "Category"
                 name: "cat"
                 widget: "select"
@@ -113,4 +210,11 @@ collections:
                   - {label: "Aesthetic", value: "aesthetic"}
                   - {label: "Nature", value: "nature"}
                   - {label: "Words", value: "words"}
-              - {label: "Image", name: "img", widget: "image"}
+              - label: "Images"
+                name: "imgs"
+                widget: "list"
+                label_singular: "Image"
+                hint: "Add one or more photos for this sticker (first photo is shown in the shop)"
+                field:
+                  label: "Image"
+                  widget: "image"

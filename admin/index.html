@@ -4,9 +4,315 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>STXTR — Admin</title>
+  <style>
+    /* ── ORDERS BUTTON (fixed, always visible) ─────────────────────────── */
+    #ordersBtn {
+      position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 99999;
+      background: #D42020; color: #fff;
+      border: 3px solid #0A0A0F; border-radius: 999px;
+      box-shadow: 4px 4px 0 #0A0A0F;
+      padding: .65rem 1.4rem;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .95rem;
+      cursor: pointer; display: flex; align-items: center; gap: .5rem;
+      transition: transform .15s, box-shadow .15s;
+    }
+    #ordersBtn:hover  { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #0A0A0F; }
+    #ordersBtn:active { transform: translate(1px,1px);   box-shadow: 2px 2px 0 #0A0A0F; }
+    #ordersBadge {
+      background: #fff; color: #D42020;
+      border-radius: 999px; padding: .05rem .55rem;
+      font-size: .8rem; font-weight: 900; min-width: 22px; text-align: center;
+      display: none;
+    }
+    #ordersBadge.show { display: inline-block; }
+
+    /* ── ORDERS OVERLAY ────────────────────────────────────────────────── */
+    #ordersOverlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 999999;
+      background: rgba(0,0,0,.7);
+      align-items: flex-start; justify-content: center;
+      padding: 1.5rem 1rem; overflow-y: auto;
+    }
+    #ordersOverlay.open { display: flex; }
+
+    /* ── ORDERS BOX ────────────────────────────────────────────────────── */
+    #ordersBox {
+      background: #fff; color: #0A0A0F;
+      border-radius: 20px; border: 3px solid #0A0A0F;
+      box-shadow: 8px 8px 0 #0A0A0F;
+      width: 100%; max-width: 860px;
+      overflow: hidden; margin-bottom: 2rem;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* Header */
+    .ob-head {
+      background: #0A0A0F; color: #fff;
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.1rem 1.5rem;
+    }
+    .ob-head h2 {
+      font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+      color: #D42020; margin: 0;
+    }
+    .ob-head-space { flex: 1; }
+    .ob-close {
+      background: none; border: none; color: #fff;
+      font-size: 1.6rem; cursor: pointer; opacity: .6; line-height: 1;
+      transition: opacity .2s; padding: 0;
+    }
+    .ob-close:hover { opacity: 1; }
+
+    /* Stats row */
+    .ob-stats { display: flex; border-bottom: 2px solid #eee; }
+    .ob-stat {
+      flex: 1; text-align: center; padding: 1rem .5rem;
+      border-right: 2px solid #eee;
+    }
+    .ob-stat:last-child { border-right: none; }
+    .ob-stat-num {
+      font-family: 'Fredoka One', cursive; font-size: 2rem;
+      color: #D42020; line-height: 1; display: block;
+    }
+    .ob-stat-num.blue   { color: #5A8FBF; }
+    .ob-stat-num.amber  { color: #E8A000; }
+    .ob-stat-num.green  { color: #16A34A; }
+    .ob-stat-lbl {
+      font-size: .68rem; font-weight: 900; text-transform: uppercase;
+      letter-spacing: .5px; color: #aaa; display: block; margin-top: .2rem;
+    }
+
+    /* Filter bar */
+    .ob-filters {
+      display: flex; gap: .5rem; flex-wrap: wrap;
+      padding: .9rem 1.5rem; border-bottom: 2px solid #eee; align-items: center;
+    }
+    .ob-filter {
+      padding: .3rem .9rem; border-radius: 999px; border: 2px solid #0A0A0F;
+      background: #fff; font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: .78rem; cursor: pointer; color: #0A0A0F;
+      transition: all .15s;
+    }
+    .ob-filter.active { background: #0A0A0F; color: #fff; }
+    .ob-clear {
+      margin-left: auto;
+      padding: .3rem .9rem; border-radius: 999px; border: 2px solid #D42020;
+      background: #fff; color: #D42020;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .78rem;
+      cursor: pointer; transition: all .15s;
+    }
+    .ob-clear:hover { background: #D42020; color: #fff; }
+
+    /* Orders list */
+    .ob-list { padding: 1.2rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .ob-empty { text-align: center; padding: 3rem; color: #bbb; font-size: 1.05rem; font-weight: 700; }
+
+    /* Order card */
+    .oc {
+      border-radius: 14px; border: 2px solid #eee;
+      border-left: 5px solid #ccc;
+      padding: 1.1rem 1.2rem; background: #FAFAF8;
+    }
+    .oc.st-new        { border-left-color: #D42020; }
+    .oc.st-processing { border-left-color: #E8A000; }
+    .oc.st-done       { border-left-color: #16A34A; opacity: .72; }
+
+    .oc-top { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-bottom: .5rem; }
+    .oc-num  { font-family: 'Fredoka One', cursive; font-size: 1rem; color: #0A0A0F; }
+    .oc-date { font-size: .75rem; color: #aaa; font-weight: 600; }
+    .oc-badge {
+      padding: .18rem .65rem; border-radius: 999px;
+      font-size: .65rem; font-weight: 900; text-transform: uppercase;
+    }
+    .badge-new        { background: #FFE0E0; color: #D42020; }
+    .badge-processing { background: #FFF4CC; color: #996600; }
+    .badge-done       { background: #DCFCE7; color: #16A34A; }
+    .oc-price { margin-left: auto; font-family: 'Fredoka One', cursive; color: #D42020; font-size: 1.1rem; }
+
+    .oc-name    { font-weight: 900; font-size: .95rem; color: #0A0A0F; }
+    .oc-email   { font-size: .8rem; color: #888; margin-bottom: .45rem; }
+    .oc-product { font-size: .85rem; font-weight: 700; color: #0A0A0F; margin-bottom: .4rem; }
+    .oc-msg {
+      font-size: .8rem; color: #555; line-height: 1.55; white-space: pre-wrap;
+      background: #fff; border-radius: 8px; padding: .6rem .8rem;
+      border: 1px solid #eee; margin-bottom: .75rem;
+    }
+
+    .oc-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .oc-btn {
+      padding: .3rem .9rem; border-radius: 999px; border: 2px solid #0A0A0F;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .75rem;
+      cursor: pointer; transition: all .15s;
+    }
+    .oc-process { background: #FFD600; color: #0A0A0F; }
+    .oc-done    { background: #16A34A; color: #fff; border-color: #16A34A; }
+    .oc-delete  { background: #fff; color: #D42020; border-color: #D42020; }
+    .oc-delete:hover { background: #D42020; color: #fff; }
+
+    @media (max-width: 600px) {
+      .ob-stats { flex-wrap: wrap; }
+      .ob-stat  { min-width: 50%; }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <!-- ── ORDERS BUTTON (always visible over Decap CMS) ─────────────────── -->
+  <button id="ordersBtn" onclick="openOrders()">
+    📋 Orders <span id="ordersBadge"></span>
+  </button>
+
+  <!-- ── ORDERS OVERLAY ────────────────────────────────────────────────── -->
+  <div id="ordersOverlay" onclick="overlayClick(event)">
+    <div id="ordersBox">
+
+      <div class="ob-head">
+        <h2>📋 Customer Orders</h2>
+        <div class="ob-head-space"></div>
+        <button class="ob-close" onclick="closeOrders()">✕</button>
+      </div>
+
+      <div class="ob-stats">
+        <div class="ob-stat"><span class="ob-stat-num"       id="sTotal">0</span><span class="ob-stat-lbl">Total</span></div>
+        <div class="ob-stat"><span class="ob-stat-num"       id="sNew">0</span><span class="ob-stat-lbl">🔴 New</span></div>
+        <div class="ob-stat"><span class="ob-stat-num amber" id="sProc">0</span><span class="ob-stat-lbl">🟡 Processing</span></div>
+        <div class="ob-stat"><span class="ob-stat-num green" id="sDone">0</span><span class="ob-stat-lbl">🟢 Done</span></div>
+        <div class="ob-stat"><span class="ob-stat-num blue"  id="sRev">$0</span><span class="ob-stat-lbl">Revenue</span></div>
+      </div>
+
+      <div class="ob-filters">
+        <button class="ob-filter active" data-f="all"        onclick="setFilter('all',this)">All</button>
+        <button class="ob-filter"        data-f="new"        onclick="setFilter('new',this)">🔴 New</button>
+        <button class="ob-filter"        data-f="processing" onclick="setFilter('processing',this)">🟡 Processing</button>
+        <button class="ob-filter"        data-f="done"       onclick="setFilter('done',this)">🟢 Done</button>
+        <button class="ob-clear"                             onclick="clearAll()">🗑 Clear All</button>
+      </div>
+
+      <div class="ob-list" id="obList"></div>
+    </div>
+  </div>
+
+  <script>
+  const KEY = 'stxtr_orders';
+  let activeFilter = 'all';
+
+  function esc(s) {
+    return String(s||'')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function getOrders()        { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+  function saveOrders(orders) { localStorage.setItem(KEY, JSON.stringify(orders)); }
+
+  /* badge on the button */
+  function refreshBadge() {
+    const n = getOrders().filter(o => o.status === 'new').length;
+    const badge = document.getElementById('ordersBadge');
+    badge.textContent = n;
+    badge.classList.toggle('show', n > 0);
+  }
+
+  function openOrders() {
+    render();
+    document.getElementById('ordersOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeOrders() {
+    document.getElementById('ordersOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function overlayClick(e) {
+    if (e.target === document.getElementById('ordersOverlay')) closeOrders();
+  }
+
+  function setFilter(f, btn) {
+    activeFilter = f;
+    document.querySelectorAll('.ob-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function render() {
+    const orders  = getOrders();
+    const newC    = orders.filter(o => o.status === 'new').length;
+    const procC   = orders.filter(o => o.status === 'processing').length;
+    const doneC   = orders.filter(o => o.status === 'done').length;
+    const rev     = orders.filter(o => o.status !== 'cancelled')
+                          .reduce((s,o) => s + (o.price||0), 0);
+
+    document.getElementById('sTotal').textContent = orders.length;
+    document.getElementById('sNew').textContent   = newC;
+    document.getElementById('sProc').textContent  = procC;
+    document.getElementById('sDone').textContent  = doneC;
+    document.getElementById('sRev').textContent   = '$' + rev;
+
+    const visible = activeFilter === 'all'
+      ? orders
+      : orders.filter(o => o.status === activeFilter);
+
+    const list = document.getElementById('obList');
+    if (!visible.length) {
+      list.innerHTML = `<div class="ob-empty">
+        ${activeFilter === 'all' ? '📭 No orders yet.' : '📭 No ' + activeFilter + ' orders.'}
+      </div>`;
+      return;
+    }
+
+    list.innerHTML = visible.map(o => `
+      <div class="oc st-${esc(o.status)}" id="oc-${o.id}">
+        <div class="oc-top">
+          <span class="oc-num">Order #${esc(o.num)}</span>
+          <span class="oc-date">${esc(o.date)} · ${esc(o.time)}</span>
+          <span class="oc-badge badge-${esc(o.status)}">${esc(o.status)}</span>
+          ${o.price ? `<span class="oc-price">$${esc(o.price)}</span>` : ''}
+        </div>
+        <div class="oc-name">${esc(o.name)}</div>
+        <div class="oc-email">📧 ${esc(o.email)}</div>
+        <div class="oc-product">🛍️ ${esc(o.product)}</div>
+        <div class="oc-msg">${esc(o.message)}</div>
+        <div class="oc-actions">
+          ${o.status !== 'processing' && o.status !== 'done'
+            ? `<button class="oc-btn oc-process" onclick="setStatus(${o.id},'processing')">🟡 Processing</button>` : ''}
+          ${o.status !== 'done'
+            ? `<button class="oc-btn oc-done" onclick="setStatus(${o.id},'done')">✅ Done</button>` : ''}
+          <button class="oc-btn oc-delete" onclick="deleteOrder(${o.id})">🗑 Delete</button>
+        </div>
+      </div>
+    `).join('');
+
+    refreshBadge();
+  }
+
+  function setStatus(id, status) {
+    const orders = getOrders();
+    const o = orders.find(x => x.id === id);
+    if (o) { o.status = status; saveOrders(orders); render(); refreshBadge(); }
+  }
+
+  function deleteOrder(id) {
+    if (!confirm('Delete this order?')) return;
+    saveOrders(getOrders().filter(x => x.id !== id));
+    render(); refreshBadge();
+  }
+
+  function clearAll() {
+    if (!confirm('Clear ALL orders? This cannot be undone.')) return;
+    localStorage.removeItem(KEY);
+    render(); refreshBadge();
+  }
+
+  // Show badge on page load
+  refreshBadge();
+
+  // Keep badge in sync if orders arrive while page is open
+  window.addEventListener('storage', e => {
+    if (e.key === KEY) { refreshBadge(); if (document.getElementById('ordersOverlay').classList.contains('open')) render(); }
+  });
+  </script>
 </body>
 </html>
