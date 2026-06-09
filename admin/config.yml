@@ -1,0 +1,116 @@
+backend:
+  name: git-gateway
+  repo: marisekh-wq/stxtrlb
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+
+  # ── WEBSITE TEXT ─────────────────────────────────────────────
+  - name: "site"
+    label: "✏️ Website Text & Links"
+    files:
+      - label: "Homepage Content"
+        name: "content"
+        file: "data/content.json"
+        format: json
+        fields:
+          - label: "Hero Tagline"
+            name: "tagline"
+            widget: "string"
+            hint: "The text under the big STXTR title"
+          - label: "About Text"
+            name: "about1"
+            widget: "text"
+            hint: "First paragraph in the About section"
+          - label: "About Text 2"
+            name: "about2"
+            widget: "text"
+            hint: "Second paragraph in the About section"
+          - label: "Instagram URL"
+            name: "instagram"
+            widget: "string"
+            default: "https://www.instagram.com/stxtrlb"
+          - label: "TikTok URL"
+            name: "tiktok"
+            widget: "string"
+            default: "https://www.tiktok.com/@stxtrlb"
+          - label: "Sticker Price ($ each)"
+            name: "sticker_price"
+            widget: "number"
+            default: 2
+          - label: "Pouch Base Price ($)"
+            name: "pouch_base"
+            widget: "number"
+            default: 2
+            hint: "Pouch + 1 patch = this + 1, + 2 patches = this + 2, etc."
+
+  # ── PRODUCT PHOTOS ────────────────────────────────────────────
+  - name: "products"
+    label: "🖼️ Product Photos"
+    files:
+      - label: "Product Images"
+        name: "product_images"
+        file: "data/products.json"
+        format: json
+        fields:
+          - label: "Canvas Pouches Photo"
+            name: "pouch"
+            widget: "image"
+            hint: "Photo shown on the Canvas Pouches card"
+          - label: "Phone Case Stickers Photo"
+            name: "stickers"
+            widget: "image"
+            hint: "Photo shown on the Phone Stickers card"
+          - label: "Patches Photo"
+            name: "patches"
+            widget: "image"
+            hint: "Photo shown on the Patches card"
+          - label: "About / Brand Photo"
+            name: "brand"
+            widget: "image"
+            hint: "Photo shown in the About section"
+
+  # ── PATCHES ───────────────────────────────────────────────────
+  - name: "patches"
+    label: "🌟 Patches"
+    files:
+      - label: "All Patches"
+        name: "patches_list"
+        file: "data/patches.json"
+        format: json
+        fields:
+          - label: "Patches"
+            name: "list"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - {label: "Name", name: "name", widget: "string"}
+              - {label: "Image", name: "img", widget: "image"}
+
+  # ── STICKERS ──────────────────────────────────────────────────
+  - name: "stickers"
+    label: "🎨 Stickers"
+    files:
+      - label: "All Stickers"
+        name: "stickers_list"
+        file: "data/stickers.json"
+        format: json
+        fields:
+          - label: "Stickers"
+            name: "list"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - {label: "Name", name: "name", widget: "string"}
+              - label: "Category"
+                name: "cat"
+                widget: "select"
+                options:
+                  - {label: "Cute", value: "cute"}
+                  - {label: "Aesthetic", value: "aesthetic"}
+                  - {label: "Nature", value: "nature"}
+                  - {label: "Words", value: "words"}
+              - {label: "Image", name: "img", widget: "image"}
